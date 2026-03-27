@@ -86,192 +86,6 @@ $(document).ready(function () {
     return scrollWidth;
   }
 
-  function burger() {
-    let burger = document.querySelector(".burger");
-    let mobMenu = document.querySelector(".menu");
-    let close = document.querySelector(".close");
-    let body = document.body; // Используем body напрямую
-    let headerWrap = document.querySelector("header");
-
-    // Более надежный селектор для ссылок меню
-    let menuLinks = document.querySelectorAll(".link");
-
-    let scroll = calcScroll();
-    let isMenuOpen = false;
-
-    // Функция для скрытия меню
-    function closeMenu() {
-      mobMenu.classList.remove("active");
-      headerWrap.classList.remove("active");
-      body.style.overflow = "";
-      body.style.marginRight = "";
-      body.style.position = "";
-      body.style.top = "";
-      body.style.width = "";
-      body.style.height = "";
-      isMenuOpen = false;
-    }
-
-    // Функция для открытия меню
-    function openMenu() {
-      mobMenu.classList.add("active");
-      headerWrap.classList.add("active");
-
-      // Фиксируем body для мобильных устройств
-      const scrollY = window.scrollY;
-      body.style.overflow = "hidden";
-      body.style.position = "fixed";
-      body.style.top = `-${scrollY}px`;
-      body.style.width = "100%";
-      body.style.height = "100%";
-      body.style.marginRight = `${scroll}px`;
-
-      isMenuOpen = true;
-
-      // Сохраняем позицию скролла для восстановления
-      body.dataset.scrollY = scrollY;
-    }
-
-    // Функция для восстановления скролла после закрытия меню
-    function restoreScroll() {
-      const scrollY = body.dataset.scrollY || 0;
-      window.scrollTo(0, parseInt(scrollY));
-    }
-
-    // Обработчик клика по бургеру
-    burger.addEventListener("click", function (e) {
-      e.stopPropagation();
-      if (isMenuOpen) {
-        closeMenu();
-        restoreScroll();
-      } else {
-        openMenu();
-      }
-    });
-
-    // Обработчик клика по крестику
-    close.addEventListener("click", function (e) {
-      e.stopPropagation();
-      closeMenu();
-      restoreScroll();
-    });
-
-    // Обработчик клика по ссылкам в меню
-    menuLinks.forEach((link) => {
-      link.addEventListener("click", function (e) {
-        e.preventDefault();
-
-        const targetId = this.getAttribute("href");
-        if (targetId === "#" || targetId === "##") return;
-
-        // Сохраняем позицию ДО закрытия меню
-        const scrollBeforeClose = window.pageYOffset;
-
-        const LinkHref = document.querySelectorAll(`.link[href="${targetId}"]`);
-
-        menuLinks.forEach((el) => {
-          el.classList.remove("active");
-        });
-
-        LinkHref.forEach((sameLink) => {
-          sameLink.classList.add("active");
-        });
-
-        // Закрываем меню
-        closeMenu();
-
-        // Всегда скроллим от сохраненной позиции
-        setTimeout(() => {
-          const targetElement = document.querySelector(targetId);
-          if (targetElement) {
-            const headerHeight = headerWrap.offsetHeight;
-            const targetPosition = targetElement.offsetTop - headerHeight;
-
-            window.scrollTo({
-              top: targetPosition,
-              behavior: "smooth",
-            });
-          }
-        }, 50);
-      });
-    });
-
-    // Закрытие меню при клике вне области меню
-    document.addEventListener("click", function (e) {
-      if (
-        isMenuOpen &&
-        !e.target.closest(".menu") &&
-        !e.target.closest(".burger") &&
-        e.target !== burger
-      ) {
-        closeMenu();
-        restoreScroll();
-      }
-    });
-
-    // Обработчик изменения ориентации и resize
-    window.addEventListener("resize", function () {
-      if (isMenuOpen && window.innerWidth > 768) {
-        // 768px - пример breakpoint для desktop
-        closeMenu();
-        restoreScroll();
-      }
-    });
-
-    // Предотвращаем закрытие при клике внутри меню
-    mobMenu.addEventListener("click", function (e) {
-      e.stopPropagation();
-    });
-  }
-
-  //burger();
-
-  //////////////////////////////////////////////////////////////////////////////////////////////
-  ///
-
-  $("#progress1").on("submit", function (e) {
-    e.preventDefault();
-    if ($(this).valid() === false) return false;
-    // second param is speed in seconds
-    progressBar(e.target, 4);
-    return false;
-  });
-
-  function progressBar(form, speed) {
-    var progressbar = $("#" + form.id + " .section5__bar");
-    progressbar.addClass("active");
-    var max = 100;
-    var time = (1000 / max) * speed;
-    var value = parseInt(progressbar.attr("data-val"));
-    var animate = setInterval(function () {
-      value += 1;
-      progressbar.attr("data-val", value);
-      progressbar.width(value + "%");
-      progressbar.find("span").text(value + "%");
-      if (value == max) {
-        clearInterval(animate);
-        var inputSign = $("#" + form.id + " > div.flex.align-item");
-        setTimeout(function () {
-          // set pause before the form
-          triggerOnStop(progressbar, inputSign.val());
-        }, 700);
-      }
-    }, time);
-  }
-
-  function triggerOnStop(el, inputValue) {
-    //$('.location-form').trigger('click');
-    document.querySelector(".location-form").click();
-    el.removeClass("active");
-    el.find("span").text("0%");
-    el.width("0px");
-    el.attr("data-val", "0");
-    $("#progress-modal input[name=item_sign]").val(inputValue);
-  }
-
-  //////////////////////////////////////////////////////////////////////////////////////////////
-  ///
-
   let coockeBtn = document.querySelector(".coocke-btn");
   let modalCoocke = document.querySelector("#modalcoocke");
 
@@ -352,95 +166,45 @@ $(document).ready(function () {
     },
   });
 
-  $(window)
-    .on("resize", function (e) {
-      // Переменная, по которой узнаем запущен слайдер или нет.
-      // Храним её в data
-      var init = $(".second-list").data("init-slider");
-      // Если мобильный
+  // $(window)
+  //   .on("resize", function (e) {
+  //     // Переменная, по которой узнаем запущен слайдер или нет.
+  //     // Храним её в data
+  //     var init = $(".second-list").data("init-slider");
+  //     // Если мобильный
 
-      let sliderImages = document.querySelectorAll(".images");
+  //     let sliderImages = document.querySelectorAll(".images");
 
-      if (document.documentElement.clientWidth < 650) {
-        if (sliderImages) {
-          sliderImages.forEach((el) => {
-            el.remove();
-          });
-        }
+  //     if (document.documentElement.clientWidth < 650) {
+  //       if (sliderImages) {
+  //         sliderImages.forEach((el) => {
+  //           el.remove();
+  //         });
+  //       }
 
-        if (init != 1) {
-          $(".second-list")
-            .slick({
-              slidesToShow: 1,
-              slidesToScroll: 1,
-              arrows: false,
-              dots: true,
-              //fade: true,
-              autoplay: true,
-              speed: 1000,
-              autoplaySpeed: 2000,
-            })
-            .data({ "init-slider": 1 });
-        }
-      } else {
-        // Если слайдер запущен
-        if (init == 1) {
-          // Разрушаем слайдер и записываем в data init-slider = 0
-          $(".second-list").slick("unslick").data({ "init-slider": 0 });
-        }
-      }
-    })
-    .trigger("resize");
-
-  $(".seven-slider").slick({
-    slidesToShow: 4,
-    slidesToScroll: 1,
-    //centerMode: true,
-    //slickCurrentSlide: 7,
-    //initialSlide: 6,
-    //slide: "7",
-    //centerPadding: '40px',
-    arrows: true,
-    dots: false,
-    //autoplay: true,
-    //autoplaySpeed: 2000,
-    prevArrow:
-      '<button type="button" class="slick-prev"><svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M26 7.5L15.3297 18.6151C14.5867 19.389 14.5867 20.6113 15.3297 21.3852L26 32.5" stroke="#1538BA" stroke-width="3" stroke-linecap="round"/></svg></button>',
-    nextArrow:
-      '<button type="button" class="slick-next"><svg width="40" height="40" viewBox="0 0 40 40" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M14 32.5L24.6703 21.3849C25.4133 20.611 25.4133 19.3887 24.6703 18.6148L14 7.5" stroke="#1538BA" stroke-width="3" stroke-linecap="round"/></svg></button>',
-    responsive: [
-      {
-        breakpoint: 990,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 1,
-          arrows: true,
-          dots: false,
-        },
-      },
-      {
-        breakpoint: 750,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 1,
-          arrows: true,
-          dots: false,
-        },
-      },
-      {
-        breakpoint: 650,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-          arrows: false,
-          dots: true,
-          autoplay: true,
-          autoplaySpeed: 2000,
-          speed: 1500,
-        },
-      },
-    ],
-  });
+  //       if (init != 1) {
+  //         $(".second-list")
+  //           .slick({
+  //             slidesToShow: 1,
+  //             slidesToScroll: 1,
+  //             arrows: false,
+  //             dots: true,
+  //             //fade: true,
+  //             autoplay: true,
+  //             speed: 1000,
+  //             autoplaySpeed: 2000,
+  //           })
+  //           .data({ "init-slider": 1 });
+  //       }
+  //     } else {
+  //       // Если слайдер запущен
+  //       if (init == 1) {
+  //         // Разрушаем слайдер и записываем в data init-slider = 0
+  //         $(".second-list").slick("unslick").data({ "init-slider": 0 });
+  //       }
+  //     }
+  //   })
+  //   .trigger("resize");
 
   // // валидация ============================
 

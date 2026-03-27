@@ -66,7 +66,7 @@ $(document).ready(function () {
 
   if (contentTitle) {
     if (getStoredItem("town")) {
-      contentTitle.innerHTML = `<span id="thanksName" class="_yellow">Имя,</span> благодарим Вас за заявку на город <span id="thanksTown"></span> на франшизу SMARTBOX`;
+      contentTitle.innerHTML = `<span id="thanksName" class="_yellow">Имя,</span> благодарим Вас за заявку на город <span id="thanksTown"></span> на франшизу «велодело»`;
     }
   }
 
@@ -284,7 +284,7 @@ $(document).ready(function () {
     if (getStoredItem("name") && getStoredItem("name") != "false") {
       var thankNameText = $("#thanksNameModal").text();
       $("#thanksNameModal").text(
-        getStoredItem("name").trim() + ", " + thankNameText.toLowerCase()
+        getStoredItem("name").trim() + ", " + thankNameText.toLowerCase(),
       );
       $("#thanksName").text(getStoredItem("name").trim() + ",");
       document.title =
